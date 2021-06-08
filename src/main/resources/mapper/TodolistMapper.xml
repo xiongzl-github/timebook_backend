@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.timebook.mapper.TodolistMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="top.timebook.model.Todolist">
+        <id column="id" property="id" />
+        <result column="userId" property="userId" />
+        <result column="categoryId" property="categoryId" />
+        <result column="targetIds" property="targetIds" />
+        <result column="targetPeriodId" property="targetPeriodId" />
+        <result column="targetId" property="targetId" />
+        <result column="taskname" property="taskname" />
+        <result column="repeatType" property="repeatType" />
+        <result column="estimatedTime" property="estimatedTime" />
+        <result column="startTime" property="startTime" />
+        <result column="adjustDeadline" property="adjustDeadline" />
+        <result column="deadline" property="deadline" />
+        <result column="difficulty" property="difficulty" />
+        <result column="priority" property="priority" />
+        <result column="timeslotType" property="timeslotType" />
+        <result column="reasonType" property="reasonType" />
+        <result column="adjustType" property="adjustType" />
+        <result column="display" property="display" />
+        <result column="completed" property="completed" />
+        <result column="core" property="core" />
+        <result column="status" property="status" />
+        <result column="createTime" property="createTime" />
+        <result column="updateTime" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, userId, categoryId, targetIds, targetPeriodId, targetId, taskname, repeatType, estimatedTime, startTime, adjustDeadline, deadline, difficulty, priority, timeslotType, reasonType, adjustType, display, completed, core, status, createTime, updateTime
+    </sql>
+    <select id="getTodolists" resultType="java.util.Map">
+        select a.id, a.userId, a.categoryId, a.targetIds, a.targetPeriodId, a.targetId, a.taskname,
+        a.repeatType, a.estimatedTime, a.startTime, a.adjustDeadline, a.deadline, a.difficulty, a.priority,
+        a.timeslotType, a.reasonType, a.adjustType, a.display, a.completed, a.core, a.status, a.createTime, b.icon, b.iconType
+        from todolist as a left join category as b on a.categoryId = b.id where 1 = 1
+        <if test="params.userId != null">
+            and a.userId = #{params.userId}
+        </if>
+        <if test="params.status != null">
+            and a.status = #{params.status}
+        </if>
+        <if test="params.curDatetime != null">
+            and a.startTime &lt;= str_to_date(#{params.curDatetime}, '%Y-%m-%d')
+        </if>
+        <if test="params.curDatetime != null">
+            and a.deadline &gt;= str_to_date(#{params.curDatetime},'%Y-%m-%d')
+        </if>
+    </select>
+
+    <select id="getTimelineTodolists" resultType="java.util.Map">
+        select a.id, a.taskname, a.targetPeriodId, a.targetId, b.icon, b.iconType
+        from todolist as a left join category as b on a.categoryId = b.id where 1 = 1
+        <if test="params.userId != null">
+            and a.userId = #{params.userId}
+        </if>
+        <if test="params.status != null">
+            and a.status = #{params.status}
+        </if>
+        <if test="params.completed != null">
+            and a.completed = #{params.completed}
+        </if>
+        <if test="params.curDatetime != null">
+            and a.startTime &lt;= str_to_date(#{params.curDatetime}, '%Y-%m-%d')
+        </if>
+        <if test="params.curDatetime != null">
+            and a.deadline &gt;= str_to_date(#{params.curDatetime},'%Y-%m-%d')
+        </if>
+    </select>
+
+</mapper>

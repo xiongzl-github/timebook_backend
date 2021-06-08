@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.timebook.mapper.TargetMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="top.timebook.model.Target">
+        <id column="id" property="id" />
+        <result column="userId" property="userId" />
+        <result column="parentId" property="parentId" />
+        <result column="targetThemeId" property="targetThemeId" />
+        <result column="targetName" property="targetName" />
+        <result column="status" property="status" />
+        <result column="createTime" property="createTime" />
+        <result column="updateTime" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, userId, parentId, targetThemeId, targetName, status, createTime, updateTime
+    </sql>
+    <select id="getTargetsOfCascader" resultType="java.util.Map">
+        SELECT
+        a.targetName,
+        a.id,
+        b.targetName AS parentTargetName,
+        b.id AS parentId,
+        c.id as targetThemeId,
+        c.categoryName as themeName
+        FROM
+        target a
+        LEFT JOIN target b ON a.parentId = b.id
+        LEFT JOIN category c on a.targetThemeId = c.id
+        WHERE
+        a.`status` = 1
+        AND a.userId = 1
+        AND a.id in
+        <foreach item="id" collection="list" separator="," open="(" close=")" index="">
+           #{id}
+        </foreach>
+    </select>
+
+</mapper>

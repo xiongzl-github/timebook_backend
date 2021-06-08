@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.timebook.mapper.TargetPeriodMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="top.timebook.model.TargetPeriod">
+        <id column="id" property="id" />
+        <result column="userId" property="userId" />
+        <result column="targetThemeId" property="targetThemeId" />
+        <result column="targetPeriodName" property="targetPeriodName" />
+        <result column="periodNum" property="periodNum" />
+        <result column="availableTime" property="availableTime" />
+        <result column="priority" property="priority" />
+        <result column="chosenTargets" property="chosenTargets" />
+        <result column="deadline" property="deadline" />
+        <result column="deadlineType" property="deadlineType" />
+        <result column="targetPlan" property="targetPlan" />
+        <result column="targetCycle" property="targetCycle" />
+        <result column="completed" property="completed" />
+        <result column="display" property="display" />
+        <result column="expectTargetPeriod" property="expectTargetPeriod" />
+        <result column="status" property="status" />
+        <result column="createTime" property="createTime" />
+        <result column="updateTime" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, userId, targetThemeId, targetPeriodName, periodNum, availableTime, priority, chosenTargets, deadline, deadlineType, targetPlan, targetCycle, completed, display, expectTargetPeriod, status, createTime, updateTime
+    </sql>
+    <select id="getTargetPeriods" resultType="java.util.Map">
+        select a.id, a.userId, a.targetThemeId, a.targetPeriodName, a.periodNum,
+        a.availableTime, a.priority, a.chosenTargets, a.deadline, a.deadlineType,
+        a.targetPlan, a.targetCycle, a.completed, a.display, b.icon, b.iconType
+        from targetPeriod as a left join category as b on a.targetThemeId = b.id where 1 = 1
+        <if test="params.userId != null">
+            and a.userId = #{params.userId}
+        </if>
+        <if test="params.status != null">
+            and a.status = #{params.status}
+        </if>
+    </select>
+
+</mapper>

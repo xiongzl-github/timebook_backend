@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.timebook.mapper.HabitMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="top.timebook.model.Habit">
+        <id column="id" property="id" />
+        <result column="userId" property="userId" />
+        <result column="categoryId" property="categoryId" />
+        <result column="habit" property="habit" />
+        <result column="cycle" property="cycle" />
+        <result column="frequency" property="frequency" />
+        <result column="refreshRate" property="refreshRate" />
+        <result column="expectAchievingRate" property="expectAchievingRate" />
+        <result column="comparator" property="comparator" />
+        <result column="display" property="display" />
+        <result column="keyHabit" property="keyHabit" />
+        <result column="apply" property="apply" />
+        <result column="stopUseTime" property="stopUseTime" />
+        <result column="status" property="status" />
+        <result column="createTime" property="createTime" />
+        <result column="updateTime" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, userId, categoryId, habit, keyHabit, apply, stopUseTime, cycle, frequency, refreshRate, expectAchievingRate, comparator, display, status, createTime, updateTime
+    </sql>
+    <select id="getHabitList" resultType="java.util.Map">
+        SELECT
+            a.id,
+            a.userId,
+            a.categoryId,
+            a.habit,
+            a.cycle,
+            a.frequency,
+            a.refreshRate,
+            a.expectAchievingRate,
+            a.comparator,
+            a.display,
+            a.apply,
+            a.keyHabit,
+            b.categoryName,
+            b.icon,
+            b.iconType,
+            c.id as habitReportId,
+            c.habitResult
+        FROM
+            habit a
+            LEFT JOIN category b ON a.categoryId = b.id
+            LEFT JOIN habitReport c ON a.id = c.habitId
+            AND date_format(c.habitTime,'%Y-%m-%d') = #{date}
+        WHERE
+            a.userId = #{userId}
+            AND a.status = 1
+            AND (a.stopUseTime &lt;= str_to_date( #{date}, '%Y-%m-%d' ) OR ISNULL(a.stopUseTime))
+        order by a.refreshRate desc;
+    </select>
+
+</mapper>

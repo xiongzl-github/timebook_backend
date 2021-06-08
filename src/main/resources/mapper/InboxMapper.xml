@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.timebook.mapper.InboxMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="top.timebook.model.Inbox">
+        <id column="id" property="id" />
+        <result column="userId" property="userId" />
+        <result column="remark" property="remark" />
+        <result column="hide" property="display" />
+        <result column="handle" property="handle" />
+        <result column="handleTime" property="handleTime" />
+        <result column="status" property="status" />
+        <result column="createTime" property="createTime" />
+        <result column="updateTime" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, userId, remark, display, handle, handleTime, status, createTime, updateTime
+    </sql>
+
+</mapper>

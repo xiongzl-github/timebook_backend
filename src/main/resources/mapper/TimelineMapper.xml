@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="top.timebook.mapper.TimelineMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="top.timebook.model.Timeline">
+        <id column="id" property="id" />
+        <result column="userId" property="userId" />
+        <result column="startTime" property="startTime" />
+        <result column="endTime" property="endTime" />
+        <result column="todolistId" property="todolistId" />
+        <result column="targetId" property="targetId" />
+        <result column="targetPeriodId" property="targetPeriodId" />
+        <result column="progress" property="progress" />
+        <result column="workStatus" property="workStatus" />
+        <result column="emotion" property="emotion" />
+        <result column="feel" property="feel" />
+        <result column="display" property="display" />
+        <result column="other" property="other" />
+        <result column="status" property="status" />
+        <result column="createTime" property="createTime" />
+        <result column="updateTime" property="updateTime" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, userId, startTime, endTime, todolistId, targetId, targetPeriodId, progress, workStatus, emotion, feel, display, other, status, createTime, updateTime
+    </sql>
+    <select id="getTimelines" resultType="java.util.Map">
+        select a.id, a.userId, a.startTime, a.endTime, a.todolistId, a.targetId, a.targetPeriodId, a.progress, a.workStatus, a.emotion, a.feel, a.display, a.other, a.status, a.createTime, b.taskname, c.icon, c.iconType
+        from timeline as a left join todolist as b on a.todolistId = b.id left join category as c on b.categoryId = c.id where 1 = 1
+        <if test="params.userId != null">
+            and a.userId = #{params.userId}
+        </if>
+        <if test="params.status != null">
+            and a.status = #{params.status}
+        </if>
+        <if test="params.curDatetime != null">
+            and date_format(a.createTime,'%Y-%m-%d') = str_to_date(#{params.curDatetime}, '%Y-%m-%d')
+        </if>
+        order by str_to_date(a.startTime,'%H:%i:%s') desc
+    </select>
+
+</mapper>
